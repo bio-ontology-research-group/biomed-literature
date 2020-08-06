@@ -24,7 +24,7 @@ def lmi(total, x, y, xy):
 def scores(a, b, index='pubmed', x=None):
     ndocs = 30676436 if index == 'pubmed' else 2741994
 
-    xy = termcounts(a + " AND " + b)
+    xy = termcounts("(%s) AND (%s)" % (a, b))
     if isclose(xy, 0, abs_tol=1e-10):
         return None
     if x is None:
