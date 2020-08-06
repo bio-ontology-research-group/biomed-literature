@@ -26,6 +26,19 @@ def read_terms(ontfile):
         terms[term_.id] = trm
     return terms
 
+def term_esquery(terms, tid):
+    q = [terms[tid]['name']]
+    for i in terms[tid]['children']:
+        q.append(terms[i]['name'])
+    q = "\"" + "\" OR \"".join(q) + "\""
+    return q
+
+def test_term_esquery():  # ~4s
+    terms = read_terms("../../../ontrepository/doid.obo")
+    r = term_esquery(terms, 'DOID:0060519')
+    assert '"beta-lactam allergy"' in r
+    assert '"amoxicillin allergy"' in r
+
 def test_do():  # ~4s
     terms = read_terms("../../../ontrepository/doid.obo")
     assert len(terms) == 10194  # 12639
