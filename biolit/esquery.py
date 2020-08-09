@@ -1,7 +1,6 @@
 from elasticsearch import Elasticsearch
 
-es = Elasticsearch('http://borgdb.cbrc.kaust.edu.sa:9200/')
-
+es = Elasticsearch('http://borgdb.cbrc.kaust.edu.sa:9200/', timeout=220)
 
 def termcounts(terms, index='pubmed', default_field="abstract"):
     query = {

@@ -16,8 +16,8 @@ def read_terms(ontfile):
             '_id': term_.id,
             'name': term_.name,
             # 'definition': term_.definition,
-            # 'alt_ids': [a for a in term_.alternate_ids],
-            # 'synonyms': [s.description for s in term_.synonyms],
+            'alt_ids': [a for a in term_.alternate_ids],
+            'synonyms': [s.description for s in term_.synonyms],
             'leaf': term_.is_leaf(),
             'isa': set([t.id for t in term_.superclasses()]),
             'children': set([t.id for t in term_.subclasses()
@@ -30,6 +30,8 @@ def term_esquery(terms, tid):
     q = [terms[tid]['name']]
     for i in terms[tid]['children']:
         q.append(terms[i]['name'])
+        q.extend(terms[i]['alt_ids'])
+        q.extend(terms[i]['synonyms'])
     q = "\"" + "\" OR \"".join(q) + "\""
     return q
 
@@ -38,6 +40,7 @@ def test_term_esquery():  # ~4s
     r = term_esquery(terms, 'DOID:0060519')
     assert '"beta-lactam allergy"' in r
     assert '"amoxicillin allergy"' in r
+    assert '"penicillin G allergy"' in r
 
 def test_do():  # ~4s
     terms = read_terms("../../../ontrepository/doid.obo")

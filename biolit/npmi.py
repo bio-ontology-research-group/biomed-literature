@@ -5,6 +5,8 @@ def npmi(total, x, y, xy):
     px = x / total
     py = y / total
     pxy = xy / total
+    if isclose(px*py, 0, abs_tol=1e-14):
+        return None
     pmi = log(pxy / (px * py))
     return pmi / (-1 * log(pxy))
 
@@ -14,10 +16,14 @@ def tscore(total, x, y, xy):
 
 
 def zscore(total, x, y, xy):
+    if isclose(x*y, 0, abs_tol=1e-14):
+        return None
     return (xy - (x * y / (total * total))) / sqrt(x * y / (total * total))
 
 
 def lmi(total, x, y, xy):
+    if isclose(x*y, 0, abs_tol=1e-14):
+        return None
     return xy * log(total * xy / (x * y))
 
 
@@ -25,7 +31,7 @@ def scores(a, b, index='pubmed', x=None):
     ndocs = 30676436 if index == 'pubmed' else 2741994
 
     xy = termcounts("(%s) AND (%s)" % (a, b))
-    if isclose(xy, 0, abs_tol=1e-10):
+    if xy < 1:
         return None
     if x is None:
         x = termcounts(a)

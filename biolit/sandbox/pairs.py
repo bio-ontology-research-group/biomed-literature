@@ -36,3 +36,9 @@ def test_do_pairs():
     assert len(r) == 4
     r = pairs(do, 'DOID:874', do, 'DOID:0060519')
     assert len(r) == 4
+
+def test_do_concepts_with_many_children():
+    do = read_terms("../../../ontrepository/doid.obo")
+    # drug allergy, respiratory system disease
+    r = pairs(do, 'DOID:0060500', do, 'DOID:1579')
+    assert len(r) == 180
