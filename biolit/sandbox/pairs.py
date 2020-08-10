@@ -21,6 +21,11 @@ def pairs(terms1, rnode1, terms2, rnode2, index='pmc'):
                 })
     return r
 
+def cpairs(ontology1, root1, ontology2, root2, index='pmc'):
+    terms1 = read_terms(ontology1)
+    terms2 = read_terms(ontology2)
+    return pairs(terms1, root1, terms2, root2, index=index)
+
 def test_do_pairs():
     do = read_terms("../../../ontrepository/doid.obo")
     assert len(do['DOID:874']['children']) == 6   # bacterial pneumonia
@@ -37,8 +42,16 @@ def test_do_pairs():
     r = pairs(do, 'DOID:874', do, 'DOID:0060519')
     assert len(r) == 4
 
-def test_do_concepts_with_many_children():
+def test_do_concepts_with_many_children():  # ~16m
     do = read_terms("../../../ontrepository/doid.obo")
     # drug allergy, respiratory system disease
     r = pairs(do, 'DOID:0060500', do, 'DOID:1579')
     assert len(r) == 180
+
+def test_concept_pairs_with_two_ontology():  # ~16m
+    do = "../../../ontrepository/doid.obo"
+    chebi = "../../../ontrepository/chebi_lite.obo"
+    # homopolymer, respiratory system disease
+    r = cpairs(chebi, 'CHEBI:60029', do, 'DOID:1579')
+    print(json.dumps(r, indent=4))
+    assert len(r) == 42

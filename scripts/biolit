@@ -1,0 +1,31 @@
+#!/usr/bin/env python
+import json
+
+from argh import arg
+from biolit.sandbox.pairs import cpairs
+
+"""
+Command line interface for biolit project
+This script is added to user PATH when a package installation made
+"""
+
+@arg('ontology1', help='File for the first ontology')
+@arg('concept1', help='Term id of the root concept in the first ontology')
+@arg('ontology2', help='File for the second ontology')
+@arg('concept2', help='Term id of the root concept in the second ontology')
+@arg('--index', help='Elasticsearch index name; pmc for PMC, pubmed for PubMed')
+def findpairs(ontology1, concept1, ontology2, concept2, index='pmc'):
+    """
+    Find concept pairs and their association scores in the literature,
+    for two concepts and their child concepts specified by the params
+    ontology1, concept1, and ontology2, concept2.
+    """
+    r = cpairs(ontology1, concept1, ontology2, concept2, index)
+    print(json.dumps(r, indent=4))
+
+
+if __name__ == '__main__':
+    import argh
+    argh.dispatch_commands([
+        findpairs
+    ])
