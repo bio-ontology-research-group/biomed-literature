@@ -1,6 +1,7 @@
 from elasticsearch import Elasticsearch
+from elasticsearch.helpers import scan
 
-es = Elasticsearch('http://borgdb.cbrc.kaust.edu.sa:9200/', timeout=220)
+es = Elasticsearch('http://borgdb.cbrc.kaust.edu.sa:9200/', timeout=440)
 
 def termcounts(terms, index='pubmed', default_field="abstract"):
     query = {
@@ -14,6 +15,9 @@ def termcounts(terms, index='pubmed', default_field="abstract"):
     r = es.count(index=index, body=query)['count']
     return r
 
+def escapereserved(query):
+    r = query.replace('"', '\\"')
+    return r
 
 def test_termcounts():
     tests = [("cough", 36089, 52272, 5906, 35010),

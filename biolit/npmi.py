@@ -36,7 +36,7 @@ def scores(a, b, index='pubmed', x=None):
     if x is None:
         x = termcounts(a)
     y = termcounts(b)
-    r = [npmi(ndocs, x, y, xy), tscore(ndocs, x, y, xy),
+    r = [x, y, xy, npmi(ndocs, x, y, xy), tscore(ndocs, x, y, xy),
          zscore(ndocs, x, y, xy), lmi(ndocs, x, y, xy)]
     return r
 

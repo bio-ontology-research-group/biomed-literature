@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 import json
 
+import argh
 from argh import arg
-from biolit.sandbox.pairs import cpairs
+
+from biolit.esindex import es_index_pairsfile
+from biolit.sandbox.pairs import cpairs, view_withcytoscape
 
 """
 Command line interface for biolit project
@@ -23,9 +26,23 @@ def findpairs(ontology1, concept1, ontology2, concept2, index='pmc'):
     r = cpairs(ontology1, concept1, ontology2, concept2, index)
     print(json.dumps(r, indent=4))
 
+def index(infile):
+    """
+    Index association pairs with Elasticsearch
+     """
+    r = es_index_pairsfile(infile)
+    print("#documents indexed: %d" % r)
+
+@arg('infile', help='Association pairs file, generated with the'
+                    ' findpairs command')
+def cyview(infile):
+    """
+    See association pairs with Cytoscape desktop app
+     """
+    view_withcytoscape(infile)
+
 
 if __name__ == '__main__':
-    import argh
     argh.dispatch_commands([
-        findpairs
+        findpairs, index, cyview
     ])

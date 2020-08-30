@@ -1,16 +1,19 @@
 from pronto import *
+from biolit.esquery import escapereserved
 '''
 Term stanzas constitute the nodes in an ontology graph.
 Formally a Term stanza is equivalent to a Class declaration in OWL.
 https://owlcollab.github.io/oboformat/doc/GO.format.obo-1_4.html
 '''
 
+MAX_CHILDREN = 180000
 
 def read_terms(ontfile):
     o = Ontology(ontfile)
     terms = dict()
     for term_ in o.terms():
-        if term_.obsolete:
+        c = set([t.id for t in term_.subclasses() if t.id != term_.id])
+        if term_.obsolete or len(c) > MAX_CHILDREN:
             continue
         trm = {
             '_id': term_.id,
@@ -20,18 +23,18 @@ def read_terms(ontfile):
             'synonyms': [s.description for s in term_.synonyms],
             'leaf': term_.is_leaf(),
             'isa': set([t.id for t in term_.superclasses()]),
-            'children': set([t.id for t in term_.subclasses()
-                             if t.id != term_.id])
+            'children': c
         }
         terms[term_.id] = trm
     return terms
 
 def term_esquery(terms, tid):
-    q = [terms[tid]['name']]
+    q = [escapereserved(terms[tid]['name'])]
     for i in terms[tid]['children']:
-        q.append(terms[i]['name'])
-        q.extend(terms[i]['alt_ids'])
-        q.extend(terms[i]['synonyms'])
+        q.append(escapereserved(terms[i]['name']))
+        for a in ['alt_ids', 'synonyms']:
+            for trm in terms[i][a]:
+                q.append(escapereserved(trm))
     q = "\"" + "\" OR \"".join(q) + "\""
     return q
 
