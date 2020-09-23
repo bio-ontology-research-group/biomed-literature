@@ -1,18 +1,29 @@
 
 
 - Incubation project for concept associations in biomedical literature
-- Concepts will be collected from biomedical ontologies
+- Concepts are collected from biomedical ontologies
 
 
-### Example command line
+### Example command lines
 
 ```bash
 
 python setup.py install
 
-biolit findpairs data/chebi_lite.obo CHEBI:83630 data/doid.obo DOID:874
+wget ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi_lite.obo
+wget http://purl.obolibrary.org/obo/doid.obo
+
+./scripts/biolit findpairs chebi_lite.obo CHEBI:59999 doid.obo DOID:874 > c59999-d874.json
+
+./scripts/biolit index c59999-d874.json
+#documents indexed: 183
+
+./scripts/biolit cyview c59999-d874.json
 
 ```
+[Concept pairs for the example search](docs/chebi59999-do874.json)
+
+![Cytoscape view for the example search](docs/chebi59999-do874.png)
 
 ### Literature indexes
 
@@ -20,5 +31,5 @@ PMC and PubMed articles were indexed with using the scripts of the [`nosql-biose
 https://bitbucket.org/hspsdb/nosql-biosets/src/master/nosqlbiosets/pubmed/) project
 
 For development, we use a non public Elasticsearch server for PMC and PubMed queries.
-If you index PMC and PubMed articles in your Elasticsearch server update the
+After you index PMC and PubMed articles with your Elasticsearch server update the
 Elasticsearch URL in `biolit/esquery.py` file to point the queries to your server.

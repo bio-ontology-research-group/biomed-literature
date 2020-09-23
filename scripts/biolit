@@ -21,14 +21,14 @@ def findpairs(ontology1, concept1, ontology2, concept2, index='pmc'):
     """
     Find concept pairs and their association scores in the literature,
     for two concepts and their child concepts specified by the params
-    ontology1, concept1, and ontology2, concept2.
+    ontology1, concept1, ontology2, concept2.
     """
     r = cpairs(ontology1, concept1, ontology2, concept2, index)
     print(json.dumps(r, indent=4))
 
 def index(infile):
     """
-    Index association pairs with Elasticsearch
+    Index concept pairs with Elasticsearch
      """
     r = es_index_pairsfile(infile)
     print("#documents indexed: %d" % r)
@@ -37,7 +37,7 @@ def index(infile):
                     ' findpairs command')
 def cyview(infile):
     """
-    See association pairs with Cytoscape desktop app
+    See concept pairs with Cytoscape desktop app
      """
     view_withcytoscape(infile)
 
