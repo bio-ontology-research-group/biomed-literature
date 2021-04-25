@@ -4,7 +4,7 @@ import json
 import argh
 from argh import arg
 
-from biolit.esindex import es_index_pairsfile
+from biolit.esindex import es_index_pairs
 from biolit.sandbox.pairs import cpairs, view_withcytoscape
 
 """
@@ -30,7 +30,7 @@ def index(infile):
     """
     Index concept pairs with Elasticsearch
      """
-    r = es_index_pairsfile(infile)
+    r = es_index_pairs(infile)
     print("#documents indexed: %d" % r)
 
 @arg('infile', help='Association pairs file, generated with the'

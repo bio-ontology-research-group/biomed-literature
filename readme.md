@@ -33,3 +33,17 @@ https://bitbucket.org/hspsdb/nosql-biosets/src/master/nosqlbiosets/pubmed/) proj
 For development, we use a non public Elasticsearch server for PMC and PubMed queries.
 After you index PMC and PubMed articles with your Elasticsearch server update the
 Elasticsearch URL in `biolit/esquery.py` file to point the queries to your server.
+
+#### Indexing PubMed articles with their Pubtator annotations
+
+Note: This is a recent work in its early stages.
+
+Following example command line indexes PubMed XML files in the folder 
+/data/pubmed/, with the index name pubmed-2021
+
+```bash
+ 
+python ./biolit/esindex.py index-pubmed /data/pubmed/\
+	 pubmed-2021 --host localhost
+
+```
